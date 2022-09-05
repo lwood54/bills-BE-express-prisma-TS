@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createBill,
+  deleteBill,
   getBill,
   getBills,
   updateBill,
@@ -23,5 +24,6 @@ router.get("/user/:id", getBills);
 router.put("/:id", updateBill);
 
 // delete bill
+router.delete("/:id", deleteBill);
 
 export default router;

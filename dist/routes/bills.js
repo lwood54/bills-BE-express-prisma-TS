@@ -16,5 +16,6 @@ router.get("/user/:id", billsController_1.getBills);
 // update bill
 router.put("/:id", billsController_1.updateBill);
 // delete bill
+router.delete("/:id", billsController_1.deleteBill);
 exports.default = router;
 //# sourceMappingURL=bills.js.map

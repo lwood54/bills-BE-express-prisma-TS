@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateBill = exports.getBill = exports.getBills = exports.createBill = void 0;
+exports.deleteBill = exports.updateBill = exports.getBill = exports.getBills = exports.createBill = void 0;
 const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { balance, billCategoryId, dayDue, interestRate, creditLimit, paymentAmount, title, userId, } = req.body;
@@ -135,9 +135,7 @@ exports.getBill = getBill;
 // update bill
 const updateBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const billId = req.params.id;
-    const { balance, billCategoryId, dayDue, interestRate, creditLimit, paymentAmount, title,
-    // userId,
-     } = req.body;
+    const { balance, billCategoryId, dayDue, interestRate, creditLimit, paymentAmount, title, } = req.body;
     if (balance !== 0 && !Boolean(balance)) {
         return res.status(400).json({ error: "Balance is required" });
     }
@@ -156,9 +154,6 @@ const updateBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!Boolean(title)) {
         return res.status(400).json({ error: "Title is required" });
     }
-    // if (!Boolean(userId)) {
-    //   return res.status(400).json({ error: "User id is required" });
-    // }
     if (balance < 0) {
         return res
             .status(400)
@@ -214,4 +209,15 @@ const updateBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.updateBill = updateBill;
 // delete bill
+const deleteBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const billId = req.params.id;
+    try {
+        const bill = yield db_prisma_1.default.bill.delete({ where: { id: billId } });
+        res.status(200).json(bill);
+    }
+    catch (error) {
+        res.status(400).json({ error });
+    }
+});
+exports.deleteBill = deleteBill;
 //# sourceMappingURL=billsController.js.map

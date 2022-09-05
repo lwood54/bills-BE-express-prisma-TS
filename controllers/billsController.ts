@@ -135,7 +135,6 @@ export const updateBill = async (req: Request, res: Response) => {
     creditLimit,
     paymentAmount,
     title,
-    // userId,
   } = req.body;
   if (balance !== 0 && !Boolean(balance)) {
     return res.status(400).json({ error: "Balance is required" });
@@ -155,9 +154,6 @@ export const updateBill = async (req: Request, res: Response) => {
   if (!Boolean(title)) {
     return res.status(400).json({ error: "Title is required" });
   }
-  // if (!Boolean(userId)) {
-  //   return res.status(400).json({ error: "User id is required" });
-  // }
   if (balance < 0) {
     return res
       .status(400)
@@ -212,3 +208,12 @@ export const updateBill = async (req: Request, res: Response) => {
 };
 
 // delete bill
+export const deleteBill = async (req: Request, res: Response) => {
+  const billId = req.params.id;
+  try {
+    const bill = await prisma.bill.delete({ where: { id: billId } });
+    res.status(200).json(bill);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
