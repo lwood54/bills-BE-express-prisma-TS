@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user";
+import billsRoutes from "./routes/bills";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use((req, _res, next) => {
 
 // ROUTES
 app.use("/user", userRoutes);
+app.use("/bills", billsRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
   res.send("Express + Prisma + TypeScript");

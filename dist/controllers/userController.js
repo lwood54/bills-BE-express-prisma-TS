@@ -13,22 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupUser = exports.loginUser = void 0;
-const client_1 = require("@prisma/client");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const envSecret = process.env.SECRET;
 const createToken = (_id) => {
     if (envSecret) {
         return jsonwebtoken_1.default.sign({ _id }, envSecret, { expiresIn: "3d" });
     }
 };
-const prisma = new client_1.PrismaClient();
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({ error: "All fields must be filled" });
     }
-    const user = yield prisma.user.findUnique({ where: { email } });
+    const user = yield db_prisma_1.default.user.findUnique({ where: { email } });
     if (!user) {
         return res.status(404).json({ error: "No user with that email" });
     }
@@ -47,7 +46,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!email || !password) {
         return res.status(400).json({ error: "All fields must be filled" });
     }
-    const isUsed = yield prisma.user.findFirst({
+    const isUsed = yield db_prisma_1.default.user.findFirst({
         where: {
             email,
         },
@@ -58,7 +57,7 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const salt = yield bcrypt_1.default.genSalt(10);
     const hashedPassword = yield bcrypt_1.default.hash(password, salt);
     try {
-        const user = yield prisma.user.create({
+        const user = yield db_prisma_1.default.user.create({
             data: {
                 email,
                 firstName,
