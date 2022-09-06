@@ -85,7 +85,7 @@ export const createBill = async (req: Request, res: Response) => {
       },
     });
     if (bill) {
-      return res.status(200).json({ bill });
+      return res.status(200).json(bill);
     }
   } catch (error) {
     return res.status(400).json({ error });
@@ -200,7 +200,7 @@ export const updateBill = async (req: Request, res: Response) => {
       },
     });
     if (bill) {
-      return res.status(200).json({ bill });
+      return res.status(200).json(bill);
     }
   } catch (error) {
     return res.status(400).json({ error });

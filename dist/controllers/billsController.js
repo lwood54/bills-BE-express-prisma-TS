@@ -89,7 +89,7 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             },
         });
         if (bill) {
-            return res.status(200).json({ bill });
+            return res.status(200).json(bill);
         }
     }
     catch (error) {
@@ -200,7 +200,7 @@ const updateBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             },
         });
         if (bill) {
-            return res.status(200).json({ bill });
+            return res.status(200).json(bill);
         }
     }
     catch (error) {
