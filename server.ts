@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/user";
 import billsRoutes from "./routes/bills";
 import billCategoryRoutes from "./routes/billCategory";
+import { logger } from "./middleware/logger";
+import { restricted } from "./middleware/restricted";
 
 dotenv.config();
 
@@ -11,14 +13,11 @@ const port = process.env.PORT;
 
 // MIDDLEWARE
 app.use(express.json());
-app.use((req, _res, next) => {
-  console.log({ PATH: req.path, METHOD: req.method });
-  next(); // must do with middleware to advance process
-});
+app.use(logger);
 
 // ROUTES
 app.use("/user", userRoutes);
-app.use("/bills", billsRoutes);
+app.use("/bills", restricted, billsRoutes);
 app.use("/bills/category", billCategoryRoutes);
 
 app.listen(port, () => {
