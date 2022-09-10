@@ -21,9 +21,6 @@ app.use((req, _res, next) => {
 app.use("/user", user_1.default);
 app.use("/bills", bills_1.default);
 app.use("/bills/category", billCategory_1.default);
-app.get("/", (_req, res) => {
-    res.send("Express + Prisma + TypeScript");
-});
 app.listen(port, () => {
     console.log(`Server is running on PORT: ${port}`);
 });
