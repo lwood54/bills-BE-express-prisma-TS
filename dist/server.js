@@ -19,7 +19,7 @@ app.use(logger_1.logger);
 // ROUTES
 app.use("/user", user_1.default);
 app.use("/bills", restricted_1.restricted, bills_1.default);
-app.use("/bills/category", billCategory_1.default);
+app.use("/billCategories", restricted_1.restricted, billCategory_1.default);
 app.listen(port, () => {
     console.log(`Server is running on PORT: ${port}`);
 });

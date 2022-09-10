@@ -9,7 +9,6 @@ const restricted = (req, res, next) => {
     var _a;
     const authToken = (_a = req.headers["authorization"]) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     const secret = process.env.SECRET;
-    console.log({ authToken });
     if (!authToken || !secret) {
         return res.status(400).json({ error: "Unauthorized" });
     }

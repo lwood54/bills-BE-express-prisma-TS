@@ -18,7 +18,7 @@ app.use(logger);
 // ROUTES
 app.use("/user", userRoutes);
 app.use("/bills", restricted, billsRoutes);
-app.use("/bills/category", billCategoryRoutes);
+app.use("/billCategories", restricted, billCategoryRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on PORT: ${port}`);

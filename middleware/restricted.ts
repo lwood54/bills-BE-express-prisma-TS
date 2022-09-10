@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 export const restricted = (req: Request, res: Response, next: NextFunction) => {
   const authToken = req.headers["authorization"]?.split(" ")[1];
   const secret = process.env.SECRET;
-  console.log({ authToken });
   if (!authToken || !secret) {
     return res.status(400).json({ error: "Unauthorized" });
   }
