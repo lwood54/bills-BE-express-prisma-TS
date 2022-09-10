@@ -40,10 +40,17 @@ model Bill {
   billCategoryId String?
 }
 
+enum Scale {
+  ESSENTIAL
+  NEUTRAL
+  NON_ESSENTIAL
+}
+
 model BillCategory {
-  id     String  @id @default(uuid())
+  id     String @id @default(uuid())
   title  String
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  scale  Scale  @default(NEUTRAL)
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
   bills  Bill[]
 }

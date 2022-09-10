@@ -6,16 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const billCategoryController_1 = require("../controllers/billCategoryController");
 const router = express_1.default.Router();
-// ROOT: /category
+// ROOT: bills/category
 // create bill category route
 router.post("/create", billCategoryController_1.createBillCategory);
-// // get single bill route
-// router.get("/:id", getBill);
 // get all bill categories for user
-// router.get("/user/:id", getBills);
+router.get("/user/:id", billCategoryController_1.getBillCategories);
 // update bill category
-// router.put("/:id", updateBill);
+router.put("/:id", billCategoryController_1.updateBillCategory);
 // delete bill category
-// router.delete("/:id", deleteBill);
+router.delete("/:id", billCategoryController_1.deleteBillCategory);
 exports.default = router;
 //# sourceMappingURL=billCategory.js.map

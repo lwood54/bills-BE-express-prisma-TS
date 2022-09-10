@@ -115,7 +115,6 @@ export const getBills = async (req: Request, res: Response) => {
 // get single bill by user
 export const getBill = async (req: Request, res: Response) => {
   const billId = req.params.id;
-  console.log({ billId });
   try {
     const bill = await prisma.bill.findUnique({ where: { id: billId } });
     res.status(200).json(bill);

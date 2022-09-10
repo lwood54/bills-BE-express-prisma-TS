@@ -122,7 +122,6 @@ exports.getBills = getBills;
 // get single bill by user
 const getBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const billId = req.params.id;
-    console.log({ billId });
     try {
         const bill = yield db_prisma_1.default.bill.findUnique({ where: { id: billId } });
         res.status(200).json(bill);
