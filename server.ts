@@ -21,10 +21,6 @@ app.use("/user", userRoutes);
 app.use("/bills", billsRoutes);
 app.use("/bills/category", billCategoryRoutes);
 
-app.get("/", (_req: Request, res: Response) => {
-  res.send("Express + Prisma + TypeScript");
-});
-
 app.listen(port, () => {
   console.log(`Server is running on PORT: ${port}`);
 });
