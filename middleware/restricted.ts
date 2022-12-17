@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-export const restricted = (req: Request, res: Response, next: NextFunction) => {
+export const restricted = (
+  req: Request,
+  res: Response,
+  next?: NextFunction
+) => {
   const authToken = req.headers["authorization"]?.split(" ")[1];
   const secret = process.env.SECRET;
   if (!authToken || !secret) {
@@ -13,5 +17,8 @@ export const restricted = (req: Request, res: Response, next: NextFunction) => {
     }
     req.payload = payload;
   });
-  next();
+  if (next) {
+    console.log("CALLING NEXT???");
+    next();
+  }
 };

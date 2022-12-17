@@ -18,7 +18,10 @@ const restricted = (req, res, next) => {
         }
         req.payload = payload;
     });
-    next();
+    if (next) {
+        console.log("CALLING NEXT???");
+        next();
+    }
 };
 exports.restricted = restricted;
 //# sourceMappingURL=restricted.js.map

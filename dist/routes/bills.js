@@ -10,12 +10,12 @@ const router = express_1.default.Router();
 // create bill route
 router.post("/create", billsController_1.createBill);
 // get single bill route
-router.get("/:id", billsController_1.getBill);
-// get all bills for user
-router.get("/user/:id", billsController_1.getBills);
-// update bill
-router.put("/:id", billsController_1.updateBill);
-// delete bill
-router.delete("/:id", billsController_1.deleteBill);
+// router.get("/:id", getBill);
+// // get all bills for user
+// router.get("/user/:id", getBills);
+// // update bill
+// router.put("/:id", updateBill);
+// // delete bill
+// router.delete("/:id", deleteBill);
 exports.default = router;
 //# sourceMappingURL=bills.js.map

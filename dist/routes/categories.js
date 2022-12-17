@@ -8,12 +8,12 @@ const categoryController_1 = require("../controllers/categoryController");
 const router = express_1.default.Router();
 // ROOT: bills/category
 // create bill category route
-router.post("/create", categoryController_1.createBillCategory);
+router.post("/create", categoryController_1.createCategory);
 // get all bill categories for user
-router.get("/user/:id", categoryController_1.getBillCategories);
-// update bill category
-router.put("/:id", categoryController_1.updateBillCategory);
-// delete bill category
-router.delete("/:id", categoryController_1.deleteBillCategory);
+// router.get("/user/:id", getCategories);
+// // update bill category
+// router.put("/:id", updateCategory);
+// // delete bill category
+// router.delete("/:id", deleteCategory);
 exports.default = router;
-//# sourceMappingURL=billCategory.js.map
+//# sourceMappingURL=categories.js.map

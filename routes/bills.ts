@@ -1,10 +1,10 @@
 import express from "express";
 import {
   createBill,
-  deleteBill,
-  getBill,
-  getBills,
-  updateBill,
+  // deleteBill,
+  // getBill,
+  // getBills,
+  // updateBill,
 } from "../controllers/billsController";
 
 const router = express.Router();
@@ -15,15 +15,15 @@ const router = express.Router();
 router.post("/create", createBill);
 
 // get single bill route
-router.get("/:id", getBill);
+// router.get("/:id", getBill);
 
-// get all bills for user
-router.get("/user/:id", getBills);
+// // get all bills for user
+// router.get("/user/:id", getBills);
 
-// update bill
-router.put("/:id", updateBill);
+// // update bill
+// router.put("/:id", updateBill);
 
-// delete bill
-router.delete("/:id", deleteBill);
+// // delete bill
+// router.delete("/:id", deleteBill);
 
 export default router;

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../db/db.prisma";
+import { restricted } from "../middleware/restricted";
 
 const envSecret = process.env.SECRET;
 
@@ -11,14 +12,15 @@ const createToken = (_id: string) => {
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+export const login = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  // console.log({ username, password });
+  if (!username || !password) {
     return res.status(400).json({ error: "All fields must be filled" });
   }
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { username } });
   if (!user) {
-    return res.status(404).json({ error: "No user with that email" });
+    return res.status(404).json({ error: "No user with that username" });
   }
   if (user) {
     const isMatch = await bcrypt.compare(password, user.password);
@@ -26,22 +28,37 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Incorrect password" });
     }
     const token = createToken(user.id);
-    res.status(200).json({ email, token });
+    res.status(200).json({ username, userId: user.id, token });
   }
 };
 
-export const signupUser = async (req: Request, res: Response) => {
-  const { email, firstName, lastName, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: "All fields must be filled" });
+export const signup = async (req: Request, res: Response) => {
+  const { email, firstName, lastName, username, password } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: "email required" });
   }
-  const isUsed = await prisma.user.findFirst({
+  if (!password) {
+    return res.status(400).json({ error: "password required" });
+  }
+  if (!username) {
+    return res.status(400).json({ error: "username" });
+  }
+  const isEmailTaken = await prisma.user.findFirst({
     where: {
       email,
     },
   });
-  if (isUsed) {
-    return res.status(400).json({ message: "email is already in use" });
+  if (isEmailTaken) {
+    return res.status(400).json({ message: "email is already taken" });
+  }
+  const isUsernameTaken = await prisma.user.findFirst({
+    where: {
+      username,
+    },
+  });
+
+  if (isUsernameTaken) {
+    return res.status(400).json({ message: "username is already taken" });
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -52,11 +69,100 @@ export const signupUser = async (req: Request, res: Response) => {
         firstName,
         lastName,
         password: hashedPassword,
+        username,
       },
     });
     const token = createToken(user.id);
     if (user) {
-      return res.status(200).json({ user, token });
+      const { email, firstName, lastName, username } = user;
+      return res
+        .status(200)
+        .json({ email, firstName, lastName, username, userId: user.id, token });
+    }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+// use restrcited middleware function - don't pass next
+export const userUpdate = async (req: Request, res: Response) => {
+  restricted(req, res);
+  const { email, firstName, lastName, username, password } = req.body;
+  const userId = req.params.id;
+  // console.log("USER ID ???? ____------->", userId);
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return res.status(404).json({ error: "No user matches the credentials" });
+  }
+
+  const isUsernameTaken = await prisma.user.findFirst({
+    where: {
+      username,
+    },
+  });
+  if (isUsernameTaken) {
+    return res.status(400).json({ message: "username is already taken" });
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = password && (await bcrypt.hash(password, salt));
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        email,
+        firstName,
+        lastName,
+        password: hashedPassword,
+        username,
+      },
+    });
+    if (updatedUser) {
+      return res.json(200).json({ username: user.username });
+    }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+  // if (user) {
+  //   try {
+  // const salt = await bcrypt.genSalt(10);
+  // const hashedPassword = await bcrypt.hash(password, salt);
+  // const updatedUser = await prisma.user.update({
+  //   where: { id: userId },
+  //   data: {
+  //     email,
+  //     firstName,
+  //     lastName,
+  //     password: hashedPassword,
+  //     username,
+  //   },
+  // });
+  // if (updatedUser) {
+  //   return res.json(200).json({ username: user.username });
+  // }
+  //   } catch (error) {
+  //     return res.json(400).json({ error: "something went wrong" });
+  //   }
+  // }
+};
+
+export const getUser = async (req: Request, res: Response) => {
+  restricted(req, res);
+  const userId = req.params.id;
+  // console.log({ userId });
+  if (!userId) {
+    return res.status(400).json({ error: "user id required" });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    } else {
+      const { email, username, firstName, lastName } = user;
+      return res
+        .status(200)
+        .json({ email, username, firstName, lastName, userId });
     }
   } catch (error) {
     res.status(400).json({ error });

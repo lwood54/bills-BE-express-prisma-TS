@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user";
 import billsRoutes from "./routes/bills";
-import billCategoryRoutes from "./routes/billCategory";
+import categoryRoutes from "./routes/categories";
 import { logger } from "./middleware/logger";
 import { restricted } from "./middleware/restricted";
 
@@ -16,9 +16,9 @@ app.use(express.json());
 app.use(logger);
 
 // ROUTES
-app.use("/user", userRoutes);
+app.use("/", userRoutes);
 app.use("/bills", restricted, billsRoutes);
-app.use("/billCategories", restricted, billCategoryRoutes);
+app.use("/categories", restricted, categoryRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on PORT: ${port}`);
