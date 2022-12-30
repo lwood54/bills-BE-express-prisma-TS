@@ -39,7 +39,9 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(404).json({ error: "Incorrect password" });
         }
         const token = createToken(user.id);
-        res.status(200).json({ username, userId: user.id, token });
+        res
+            .status(200)
+            .json({ username, userId: user.id, email: user.email, token });
     }
 });
 exports.login = login;
@@ -176,7 +178,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        res.status(400).json({ error });
+        return res.status(400).json({ error });
     }
 });
 exports.getUser = getUser;

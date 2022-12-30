@@ -28,7 +28,9 @@ export const login = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Incorrect password" });
     }
     const token = createToken(user.id);
-    res.status(200).json({ username, userId: user.id, token });
+    res
+      .status(200)
+      .json({ username, userId: user.id, email: user.email, token });
   }
 };
 
@@ -165,6 +167,6 @@ export const getUser = async (req: Request, res: Response) => {
         .json({ email, username, firstName, lastName, userId });
     }
   } catch (error) {
-    res.status(400).json({ error });
+    return res.status(400).json({ error });
   }
 };
