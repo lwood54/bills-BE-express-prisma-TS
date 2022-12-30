@@ -18,7 +18,6 @@ export const restricted = (
     req.payload = payload;
   });
   if (next) {
-    console.log("CALLING NEXT???");
     next();
   }
 };

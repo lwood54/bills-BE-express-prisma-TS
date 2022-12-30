@@ -14,7 +14,6 @@ const createToken = (_id: string) => {
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  // console.log({ username, password });
   if (!username || !password) {
     return res.status(400).json({ error: "All fields must be filled" });
   }
@@ -91,7 +90,6 @@ export const userUpdate = async (req: Request, res: Response) => {
   restricted(req, res);
   const { email, firstName, lastName, username, password } = req.body;
   const userId = req.params.id;
-  // console.log("USER ID ???? ____------->", userId);
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
     return res.status(404).json({ error: "No user matches the credentials" });
@@ -151,7 +149,6 @@ export const userUpdate = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   restricted(req, res);
   const userId = req.params.id;
-  // console.log({ userId });
   if (!userId) {
     return res.status(400).json({ error: "user id required" });
   }
