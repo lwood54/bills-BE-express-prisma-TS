@@ -47,14 +47,13 @@ exports.login = login;
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, firstName, lastName, username, password } = req.body;
     if (!email) {
-        // return res.status(400).json({ error: "email required" });
-        return res.status(400).send("email required");
+        return res.status(400).json({ error: "email required" });
     }
     if (!password) {
         return res.status(400).json({ error: "password required" });
     }
     if (!username) {
-        return res.status(400).json({ error: "username" });
+        return res.status(400).json({ error: "username required" });
     }
     const isEmailTaken = yield db_prisma_1.default.user.findFirst({
         where: {
