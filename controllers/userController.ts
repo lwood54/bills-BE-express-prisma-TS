@@ -36,7 +36,8 @@ export const login = async (req: Request, res: Response) => {
 export const signup = async (req: Request, res: Response) => {
   const { email, firstName, lastName, username, password } = req.body;
   if (!email) {
-    return res.status(400).json({ error: "email required" });
+    // return res.status(400).json({ error: "email required" });
+    return res.status(400).send("email required");
   }
   if (!password) {
     return res.status(400).json({ error: "password required" });
