@@ -8,98 +8,83 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createBill = void 0;
-// import prisma from "../db/db.prisma";
+const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { balance, dayDue, rate, limit, amount, title, userId } = req.body;
-    return res
-        .status(200)
-        .json({ balance, dayDue, rate, limit, amount, title, userId });
+    console.log({ balance, dayDue, rate, limit, amount, title, userId });
+    if (balance !== 0 && !Boolean(balance)) {
+        return res.status(400).json({ error: "Balance is required" });
+    }
+    if (!Boolean(dayDue)) {
+        return res.status(400).json({ error: "Day due is required" });
+    }
+    if (rate !== 0 && !Boolean(rate)) {
+        return res.status(400).json({ error: "Interest Rate is required" });
+    }
+    if (!Boolean(limit)) {
+        return res.status(400).json({ error: "Credit Limit is required" });
+    }
+    if (amount !== 0 && !Boolean(amount)) {
+        return res.status(400).json({ error: "Payment Amount is required" });
+    }
+    if (!Boolean(title)) {
+        return res.status(400).json({ error: "Title is required" });
+    }
+    if (!Boolean(userId)) {
+        return res.status(400).json({ error: "User id is required" });
+    }
+    if (balance < 0) {
+        return res
+            .status(400)
+            .json({ error: "Balance must be greater than or equal to 0" });
+    }
+    if (dayDue < 1 || dayDue > 31) {
+        return res.status(400).json({ error: "Day due must be between 1 and 31" });
+    }
+    if (balance > limit) {
+        return res
+            .status(400)
+            .json({ error: "Balance cannot be greater than credit limit" });
+    }
+    if (amount < 0) {
+        return res
+            .status(400)
+            .json({ error: "Payment amount must be greater than or equal to 0" });
+    }
+    const isUserMatch = yield db_prisma_1.default.user.findUnique({ where: { id: userId } });
+    if (!isUserMatch) {
+        return res.status(404).json({ error: "No user with that id" });
+    }
+    try {
+        const bill = yield db_prisma_1.default.bill.create({
+            data: {
+                balance,
+                dayDue,
+                rate,
+                limit,
+                amount,
+                title,
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+            },
+        });
+        if (bill) {
+            return res.status(200).json(bill);
+        }
+    }
+    catch (error) {
+        return res.status(400).json({ error });
+    }
 });
 exports.createBill = createBill;
-// export const createBill = async (req: Request, res: Response) => {
-//   const { balance, categoryId, dayDue, rate, limit, amount, title, userId } =
-//     req.body;
-//   if (balance !== 0 && !Boolean(balance)) {
-//     return res.status(400).json({ error: "Balance is required" });
-//   }
-//   if (!Boolean(dayDue)) {
-//     return res.status(400).json({ error: "Day due is required" });
-//   }
-//   if (rate !== 0 && !Boolean(rate)) {
-//     return res.status(400).json({ error: "Interest Rate is required" });
-//   }
-//   if (!Boolean(limit)) {
-//     return res.status(400).json({ error: "Credit Limit is required" });
-//   }
-//   if (amount !== 0 && !Boolean(amount)) {
-//     return res.status(400).json({ error: "Payment Amount is required" });
-//   }
-//   if (!Boolean(title)) {
-//     return res.status(400).json({ error: "Title is required" });
-//   }
-//   if (!Boolean(userId)) {
-//     return res.status(400).json({ error: "User id is required" });
-//   }
-//   if (balance < 0) {
-//     return res
-//       .status(400)
-//       .json({ error: "Balance must be greater than or equal to 0" });
-//   }
-//   if (dayDue < 1 || dayDue > 31) {
-//     return res.status(400).json({ error: "Day due must be between 1 and 31" });
-//   }
-//   if (balance > limit) {
-//     return res
-//       .status(400)
-//       .json({ error: "Balance cannot be greater than credit limit" });
-//   }
-//   if (amount < 0) {
-//     return res
-//       .status(400)
-//       .json({ error: "Payment amount must be greater than or equal to 0" });
-//   }
-//   const isUserMatch = await prisma.user.findUnique({ where: { id: userId } });
-//   if (!isUserMatch) {
-//     return res.status(404).json({ error: "No user with that id" });
-//   }
-//   if (categoryId) {
-//     const isCategoryMatch = await prisma.categories.findUnique({
-//       where: { id: categoryId },
-//     });
-//     if (!isCategoryMatch) {
-//       return res.status(404).json({ error: "No bill category with that id" });
-//     }
-//   }
-//   try {
-//     const bill = await prisma.bill.create({
-//       data: {
-//         balance,
-//         dayDue,
-//         rate,
-//         limit,
-//         amount,
-//         title,
-//         user: {
-//           connect: {
-//             id: userId,
-//           },
-//         },
-//         category: categoryId && {
-//           connect: {
-//             id: categoryId,
-//           },
-//         },
-//       },
-//     });
-//     if (bill) {
-//       return res.status(200).json(bill);
-//     }
-//   } catch (error) {
-//     return res.status(400).json({ error });
-//   }
-// };
 // // get all bills by user
 // export const getBills = async (req: Request, res: Response) => {
 //   const userId = req.params.id;
