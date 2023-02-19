@@ -3,7 +3,7 @@ import prisma from "../db/db.prisma";
 
 export const createBill = async (req: Request, res: Response) => {
   const { balance, dayDue, rate, limit, amount, title, userId } = req.body;
-  console.log({ balance, dayDue, rate, limit, amount, title, userId });
+
   if (balance !== 0 && !Boolean(balance)) {
     return res.status(400).json({ error: "Balance is required" });
   }
