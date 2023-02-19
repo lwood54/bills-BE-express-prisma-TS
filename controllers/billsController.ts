@@ -1,3 +1,7 @@
+import {
+  PrismaClientInitializationError,
+  PrismaClientValidationError,
+} from "@prisma/client/runtime";
 import { Request, Response } from "express";
 import prisma from "../db/db.prisma";
 
@@ -67,7 +71,10 @@ export const createBill = async (req: Request, res: Response) => {
       return res.status(200).json(bill);
     }
   } catch (error) {
-    return res.status(400).json({ error });
+    if (error instanceof PrismaClientValidationError) {
+      return res.status(400).json({ error: error.message });
+    }
+    return res.status(400).json({ error: "error of unknown type" });
   }
 };
 

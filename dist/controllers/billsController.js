@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createBill = void 0;
+const runtime_1 = require("@prisma/client/runtime");
 const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { balance, dayDue, rate, limit, amount, title, userId } = req.body;
-    console.log({ balance, dayDue, rate, limit, amount, title, userId });
     if (balance !== 0 && !Boolean(balance)) {
         return res.status(400).json({ error: "Balance is required" });
     }
@@ -81,7 +81,10 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (error) {
-        return res.status(400).json({ error });
+        if (error instanceof runtime_1.PrismaClientValidationError) {
+            return res.status(400).json({ error: error.message });
+        }
+        return res.status(400).json({ error: "error of unknown type" });
     }
 });
 exports.createBill = createBill;
