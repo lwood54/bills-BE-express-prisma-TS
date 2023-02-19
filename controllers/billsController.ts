@@ -1,7 +1,4 @@
-import {
-  PrismaClientInitializationError,
-  PrismaClientValidationError,
-} from "@prisma/client/runtime";
+import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { Request, Response } from "express";
 import prisma from "../db/db.prisma";
 
