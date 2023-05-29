@@ -22,6 +22,7 @@ export const createBill = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No user with that id" });
   }
   try {
+    console.info("test");
     const bill = await prisma.bill.create({
       data: {
         balance,
