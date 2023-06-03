@@ -14,6 +14,7 @@ const createToken = (_id: string) => {
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
+  // return res.status(200).json({ message: "logging in" });
   if (!username || !password) {
     return res.status(400).json({ error: "All fields must be filled" });
   }

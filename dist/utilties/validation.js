@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.billValidation = exports.getErrorResponse = void 0;
-const runtime_1 = require("@prisma/client/runtime");
+const library_1 = require("@prisma/client/runtime/library");
 const getErrorResponse = (error, prefix, fallbackErrorMessage = "unkown server error") => {
-    if (error instanceof runtime_1.PrismaClientValidationError) {
+    if (error instanceof library_1.PrismaClientValidationError) {
         return error.message;
     }
     return `${prefix}: ${fallbackErrorMessage}`;

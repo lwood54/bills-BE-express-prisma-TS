@@ -26,6 +26,7 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(404).json({ error: "No user with that id" });
     }
     try {
+        console.info("test");
         const bill = yield db_prisma_1.default.bill.create({
             data: {
                 balance,

@@ -20,6 +20,9 @@ app.use(logger_1.logger);
 app.use("/", user_1.default);
 app.use("/bills", restricted_1.restricted, bills_1.default);
 app.use("/categories", restricted_1.restricted, categories_1.default);
+app.get("/test", (_, res) => {
+    res.send("Test Hello World!");
+});
 app.listen(port, () => {
     console.log(`Server is running on PORT: ${port}`);
 });

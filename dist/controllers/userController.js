@@ -25,6 +25,7 @@ const createToken = (_id) => {
 };
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
+    // return res.status(200).json({ message: "logging in" });
     if (!username || !password) {
         return res.status(400).json({ error: "All fields must be filled" });
     }

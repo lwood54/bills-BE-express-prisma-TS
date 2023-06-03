@@ -1,4 +1,4 @@
-import { PrismaClientValidationError } from "@prisma/client/runtime";
+import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 
 export const getErrorResponse = (
   error: unknown,

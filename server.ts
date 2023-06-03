@@ -19,6 +19,9 @@ app.use(logger);
 app.use("/", userRoutes);
 app.use("/bills", restricted, billsRoutes);
 app.use("/categories", restricted, categoryRoutes);
+app.get("/test", (_, res) => {
+  res.send("Test Hello World!");
+});
 
 app.listen(port, () => {
   console.log(`Server is running on PORT: ${port}`);
