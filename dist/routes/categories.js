@@ -8,9 +8,9 @@ const categoryController_1 = require("../controllers/categoryController");
 const router = express_1.default.Router();
 // ROOT: /categories
 // create category route
-router.post("/create", categoryController_1.createCategory);
+router.post("/:userId/create", categoryController_1.createCategory);
 // get all categories by user
-router.get("/list/:userId", categoryController_1.getCategories);
+router.get("/:userId/list", categoryController_1.getCategories);
 // get single category by id
 router.get("/:id", categoryController_1.getCategory);
 // update category

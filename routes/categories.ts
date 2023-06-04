@@ -12,10 +12,10 @@ const router = express.Router();
 // ROOT: /categories
 
 // create category route
-router.post("/create", createCategory);
+router.post("/:userId/create", createCategory);
 
 // get all categories by user
-router.get("/list/:userId", getCategories);
+router.get("/:userId/list", getCategories);
 
 // get single category by id
 router.get("/:id", getCategory);

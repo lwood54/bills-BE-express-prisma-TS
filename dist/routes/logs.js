@@ -8,9 +8,9 @@ const logsController_1 = require("../controllers/logsController");
 const router = express_1.default.Router();
 // ROOT: /logs
 // create log
-router.post("/create", logsController_1.createLog);
+router.post("/:userId/create", logsController_1.createLog);
 // get all logs by user
-router.get("/list/:userId", logsController_1.getLogs);
+router.get("/:userId/list", logsController_1.getLogs);
 // get single log
 router.get("/:id", logsController_1.getLog);
 // edit log

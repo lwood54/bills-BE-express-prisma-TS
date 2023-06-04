@@ -13,6 +13,6 @@ router.post("/login", userController_1.login);
 // signup route
 router.post("/signup", userController_1.signup);
 // update route
-router.patch("/user/:id", userController_1.userUpdate);
+router.put("/user/:id", userController_1.userUpdate);
 exports.default = router;
 //# sourceMappingURL=user.js.map

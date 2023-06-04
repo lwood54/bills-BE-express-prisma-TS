@@ -12,10 +12,10 @@ const router = express.Router();
 // ROOT: /logs
 
 // create log
-router.post("/create", createLog);
+router.post("/:userId/create", createLog);
 
 // get all logs by user
-router.get("/list/:userId", getLogs);
+router.get("/:userId/list", getLogs);
 
 // get single log
 router.get("/:id", getLog);

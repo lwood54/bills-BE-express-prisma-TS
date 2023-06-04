@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteCategory = exports.updateCategory = exports.getCategory = exports.getCategories = exports.createCategory = void 0;
 const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, userId } = req.body;
+    const { title } = req.body;
+    const userId = req.params.userId;
     if (!userId) {
         return res.status(400).json({ error: "user is required" });
     }

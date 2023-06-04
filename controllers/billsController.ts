@@ -3,8 +3,8 @@ import prisma from "../db/db.prisma";
 import { billValidation, getErrorResponse } from "../utilties/validation";
 
 export const createBill = async (req: Request, res: Response) => {
-  const { balance, dayDue, rate, limit, amount, title, userId } = req.body;
-
+  const { balance, dayDue, rate, limit, amount, title } = req.body;
+  const userId = req.params.userId;
   const validation = billValidation(
     "create",
     balance,
@@ -49,11 +49,12 @@ export const createBill = async (req: Request, res: Response) => {
         .json(error)
     );
   }
+  // return res.status(200).json({ message: "fake result" });
 };
 
 // get all bills by user
 export const getBills = async (req: Request, res: Response) => {
-  const userId = req.params.id;
+  const userId = req.params.userId;
   const isUserMatch = await prisma.user.findUnique({
     where: {
       id: userId,

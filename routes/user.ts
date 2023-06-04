@@ -18,6 +18,6 @@ router.post("/login", login);
 router.post("/signup", signup);
 
 // update route
-router.patch("/user/:id", userUpdate);
+router.put("/user/:id", userUpdate);
 
 export default router;

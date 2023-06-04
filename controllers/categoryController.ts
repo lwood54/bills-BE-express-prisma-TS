@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import prisma from "../db/db.prisma";
 
 export const createCategory = async (req: Request, res: Response) => {
-  const { title, userId } = req.body;
+  const { title } = req.body;
+  const userId = req.params.userId;
   if (!userId) {
     return res.status(400).json({ error: "user is required" });
   }

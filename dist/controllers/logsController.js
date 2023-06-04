@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteLog = exports.updateLog = exports.getLog = exports.getLogs = exports.createLog = void 0;
 const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const createLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { amount, categoryId, scale, title, userId } = req.body;
+    const { amount, categoryId, scale, title } = req.body;
+    const userId = req.params.userId;
     if (!userId) {
         return res.status(403).json({ error: "not authorized" });
     }
@@ -23,7 +24,7 @@ const createLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json({ error: "log title is required" });
     }
     try {
-        const newLog = yield db_prisma_1.default.log.create({
+        const createdLog = yield db_prisma_1.default.log.create({
             data: {
                 amount: Number(amount),
                 title,
@@ -40,11 +41,11 @@ const createLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 },
             },
         });
-        res.status(200).json({ data: newLog });
+        res.status(200).json(createdLog);
     }
     catch (error) {
         console.error("ERROR @logsController create", error);
-        res.status(500).json({ error });
+        res.status(500).json(error);
     }
 });
 exports.createLog = createLog;

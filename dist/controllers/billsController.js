@@ -16,7 +16,8 @@ exports.deleteBill = exports.updateBill = exports.getBill = exports.getBills = e
 const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const validation_1 = require("../utilties/validation");
 const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { balance, dayDue, rate, limit, amount, title, userId } = req.body;
+    const { balance, dayDue, rate, limit, amount, title } = req.body;
+    const userId = req.params.userId;
     const validation = (0, validation_1.billValidation)("create", balance, dayDue, rate, limit, amount, title);
     if (validation !== "valid") {
         return res.status(400).json({ error: validation });
@@ -52,11 +53,12 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             // .json({ error: getErrorResponse(error, "createBill") });
             .json(error));
     }
+    // return res.status(200).json({ message: "fake result" });
 });
 exports.createBill = createBill;
 // get all bills by user
 const getBills = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params.id;
+    const userId = req.params.userId;
     const isUserMatch = yield db_prisma_1.default.user.findUnique({
         where: {
             id: userId,

@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import prisma from "../db/db.prisma";
 
 export const createLog = async (req: Request, res: Response) => {
-  const { amount, categoryId, scale, title, userId } = req.body;
+  const { amount, categoryId, scale, title } = req.body;
+  const userId = req.params.userId;
   if (!userId) {
     return res.status(403).json({ error: "not authorized" });
   }
@@ -10,7 +11,7 @@ export const createLog = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "log title is required" });
   }
   try {
-    const newLog = await prisma.log.create({
+    const createdLog = await prisma.log.create({
       data: {
         amount: Number(amount),
         title,
@@ -27,10 +28,10 @@ export const createLog = async (req: Request, res: Response) => {
         },
       },
     });
-    res.status(200).json({ data: newLog });
+    res.status(200).json(createdLog);
   } catch (error) {
     console.error("ERROR @logsController create", error);
-    res.status(500).json({ error });
+    res.status(500).json(error);
   }
 };
 

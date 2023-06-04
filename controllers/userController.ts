@@ -134,11 +134,16 @@ export const userUpdate = async (req: Request, res: Response) => {
       },
     });
     if (updatedUser) {
-      return res.json(200).json({ username: user.username });
+      return res.status(200).json({
+        username: updatedUser.username,
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+      });
     }
   } catch (error) {
     console.error("ERROR @userController update", error);
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
 };
 

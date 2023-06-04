@@ -12,13 +12,13 @@ const router = express.Router();
 // ROOT: /bills
 
 // create bill route
-router.post("/create", createBill);
+router.post("/:userId/create", createBill);
+
+// get all bills for user
+router.get("/:userId/list", getBills);
 
 // get single bill route
 router.get("/:id", getBill);
-
-// get all bills for user
-router.get("/user/:id", getBills);
 
 // // update bill
 router.put("/:id", updateBill);
