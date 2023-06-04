@@ -26,7 +26,6 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(404).json({ error: "No user with that id" });
     }
     try {
-        console.info("test");
         const bill = yield db_prisma_1.default.bill.create({
             data: {
                 balance,
@@ -47,9 +46,11 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (error) {
-        return res
+        console.error("ERROR @billsController create", error);
+        return (res
             .status(400)
-            .json({ error: (0, validation_1.getErrorResponse)(error, "createBill") });
+            // .json({ error: getErrorResponse(error, "createBill") });
+            .json({ error }));
     }
 });
 exports.createBill = createBill;

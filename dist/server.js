@@ -8,6 +8,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const user_1 = __importDefault(require("./routes/user"));
 const bills_1 = __importDefault(require("./routes/bills"));
 const categories_1 = __importDefault(require("./routes/categories"));
+const logs_1 = __importDefault(require("./routes/logs"));
 const logger_1 = require("./middleware/logger");
 const restricted_1 = require("./middleware/restricted");
 dotenv_1.default.config();
@@ -20,8 +21,9 @@ app.use(logger_1.logger);
 app.use("/", user_1.default);
 app.use("/bills", restricted_1.restricted, bills_1.default);
 app.use("/categories", restricted_1.restricted, categories_1.default);
+app.use("/logs", restricted_1.restricted, logs_1.default);
 app.get("/test", (_, res) => {
-    res.send("Test Hello World!");
+    res.json({ message: "hello test world!" });
 });
 app.listen(port, () => {
     console.log(`Server is running on PORT: ${port}`);

@@ -45,22 +45,32 @@ export const signup = async (req: Request, res: Response) => {
   if (!username) {
     return res.status(400).json({ error: "username required" });
   }
-  const isEmailTaken = await prisma.user.findFirst({
-    where: {
-      email,
-    },
-  });
-  if (isEmailTaken) {
-    return res.status(400).json({ message: "email is already taken" });
+  try {
+    const userByEmail = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+    if (userByEmail) {
+      return res.status(409).json({ message: "email is already taken" });
+    }
+  } catch (error) {
+    console.error("ERROR @email lookup: ", error);
+    return res.status(500).json({ error });
   }
-  const isUsernameTaken = await prisma.user.findFirst({
-    where: {
-      username,
-    },
-  });
 
-  if (isUsernameTaken) {
-    return res.status(400).json({ message: "username is already taken" });
+  try {
+    const userByUsername = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
+    if (userByUsername) {
+      return res.status(409).json({ message: "username is already taken" });
+    }
+  } catch (error) {
+    console.error("ERROR @username lookup: ", error);
+    return res.status(500).json({ error });
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -74,15 +84,16 @@ export const signup = async (req: Request, res: Response) => {
         username,
       },
     });
-    const token = createToken(user.id);
     if (user) {
+      const token = createToken(user.id);
       const { email, firstName, lastName, username } = user;
       return res
         .status(200)
         .json({ email, firstName, lastName, username, userId: user.id, token });
     }
   } catch (error) {
-    res.status(400).json({ error });
+    console.error("ERROR @user create: ", error);
+    res.status(500).json({ error });
   }
 };
 

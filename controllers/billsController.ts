@@ -22,7 +22,6 @@ export const createBill = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No user with that id" });
   }
   try {
-    console.info("test");
     const bill = await prisma.bill.create({
       data: {
         balance,
@@ -42,9 +41,13 @@ export const createBill = async (req: Request, res: Response) => {
       return res.status(200).json(bill);
     }
   } catch (error) {
-    return res
-      .status(400)
-      .json({ error: getErrorResponse(error, "createBill") });
+    console.error("ERROR @billsController create", error);
+    return (
+      res
+        .status(400)
+        // .json({ error: getErrorResponse(error, "createBill") });
+        .json({ error })
+    );
   }
 };
 
