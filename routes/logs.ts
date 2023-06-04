@@ -1,25 +1,29 @@
 import express from "express";
 import {
   createLog,
-  // deleteCategory,
-  // getCategories,
-  // updateCategory,
+  deleteLog,
+  getLog,
+  getLogs,
+  updateLog,
 } from "../controllers/logsController";
 
 const router = express.Router();
 
-// ROOT: bills/category
+// ROOT: /logs
 
-// create bill category route
+// create log
 router.post("/create", createLog);
 
-// get all bill categories for user
-// router.get("/user/:id", getCategories);
+// get all logs by user
+router.get("/list/:userId", getLogs);
 
-// // update bill category
-// router.put("/:id", updateCategory);
+// get single log
+router.get("/:id", getLog);
 
-// // delete bill category
-// router.delete("/:id", deleteCategory);
+// edit log
+router.put("/:id", updateLog);
+
+// delete log
+router.delete("/:id", deleteLog);
 
 export default router;

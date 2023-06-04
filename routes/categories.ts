@@ -9,6 +9,8 @@ import {
 
 const router = express.Router();
 
+// ROOT: /categories
+
 // create category route
 router.post("/create", createCategory);
 

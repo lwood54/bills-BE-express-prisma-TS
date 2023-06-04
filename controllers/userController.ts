@@ -14,23 +14,27 @@ const createToken = (_id: string) => {
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  // return res.status(200).json({ message: "logging in" });
   if (!username || !password) {
     return res.status(400).json({ error: "All fields must be filled" });
   }
-  const user = await prisma.user.findUnique({ where: { username } });
-  if (!user) {
-    return res.status(404).json({ error: "No user with that username" });
-  }
-  if (user) {
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(404).json({ error: "Incorrect password" });
+  try {
+    const user = await prisma.user.findUnique({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ error: "No user with that username" });
     }
-    const token = createToken(user.id);
-    res
-      .status(200)
-      .json({ username, userId: user.id, email: user.email, token });
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(404).json({ error: "Incorrect password" });
+      }
+      const token = createToken(user.id);
+      res
+        .status(200)
+        .json({ username, userId: user.id, email: user.email, token });
+    }
+  } catch (error) {
+    console.error("ERROR @userController login", error);
+    res.status(500).json(error);
   }
 };
 
@@ -133,29 +137,9 @@ export const userUpdate = async (req: Request, res: Response) => {
       return res.json(200).json({ username: user.username });
     }
   } catch (error) {
-    res.status(400).json({ error });
+    console.error("ERROR @userController update", error);
+    res.status(400).json(error);
   }
-  // if (user) {
-  //   try {
-  // const salt = await bcrypt.genSalt(10);
-  // const hashedPassword = await bcrypt.hash(password, salt);
-  // const updatedUser = await prisma.user.update({
-  //   where: { id: userId },
-  //   data: {
-  //     email,
-  //     firstName,
-  //     lastName,
-  //     password: hashedPassword,
-  //     username,
-  //   },
-  // });
-  // if (updatedUser) {
-  //   return res.json(200).json({ username: user.username });
-  // }
-  //   } catch (error) {
-  //     return res.json(400).json({ error: "something went wrong" });
-  //   }
-  // }
 };
 
 export const getUser = async (req: Request, res: Response) => {
@@ -176,6 +160,9 @@ export const getUser = async (req: Request, res: Response) => {
         .json({ email, username, firstName, lastName, userId });
     }
   } catch (error) {
-    return res.status(400).json({ error });
+    console.error("ERROR @userController getUser", error);
+    return res.status(400).json(error);
   }
 };
+
+// TODO: add isAdmin boolean to schema and allow admin to delete a user

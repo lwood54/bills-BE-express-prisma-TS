@@ -18,7 +18,8 @@ export const createCategory = async (req: Request, res: Response) => {
     });
     res.status(200).json(category);
   } catch (error) {
-    res.status(400).json({ error });
+    console.error("ERROR @categoryController create", error);
+    res.status(500).json(error);
   }
 };
 
@@ -35,7 +36,8 @@ export const getCategories = async (req: Request, res: Response) => {
     });
     res.status(200).json(categories);
   } catch (error) {
-    res.status(400).json(error);
+    console.error("ERROR @categoryController getCategories", error);
+    res.status(500).json(error);
   }
 };
 
@@ -52,7 +54,8 @@ export const getCategory = async (req: Request, res: Response) => {
     });
     res.status(200).json(category);
   } catch (error) {
-    res.status(400).json(error);
+    console.error("ERROR @categoryController getCategory", error);
+    res.status(500).json(error);
   }
 };
 
@@ -78,7 +81,8 @@ export const updateCategory = async (req: Request, res: Response) => {
     });
     res.status(200).json(updatedBill);
   } catch (error) {
-    res.status(400).json(error);
+    console.error("ERROR @categoryController udpateCategory", error);
+    res.status(500).json(error);
   }
 };
 
@@ -99,6 +103,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
     });
     res.status(200).json(deletedCategory);
   } catch (error) {
-    res.status(400).json(error);
+    console.error("ERROR @categoryController deleteCategory", error);
+    res.status(500).json(error);
   }
 };

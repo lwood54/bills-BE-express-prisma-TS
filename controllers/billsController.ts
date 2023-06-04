@@ -46,7 +46,7 @@ export const createBill = async (req: Request, res: Response) => {
       res
         .status(400)
         // .json({ error: getErrorResponse(error, "createBill") });
-        .json({ error })
+        .json(error)
     );
   }
 };
@@ -73,7 +73,7 @@ export const getBills = async (req: Request, res: Response) => {
   }
 };
 
-// get single bill by user
+// get single bill
 export const getBill = async (req: Request, res: Response) => {
   const billId = req.params.id;
   try {

@@ -50,7 +50,7 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return (res
             .status(400)
             // .json({ error: getErrorResponse(error, "createBill") });
-            .json({ error }));
+            .json(error));
     }
 });
 exports.createBill = createBill;
@@ -78,7 +78,7 @@ const getBills = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getBills = getBills;
-// get single bill by user
+// get single bill
 const getBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const billId = req.params.id;
     try {

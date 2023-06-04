@@ -1,5 +1,3 @@
-// import { PrismaClientValidationError } from "@prisma/client";
-
 import { PrismaClientValidationError } from "@prisma/client/runtime";
 
 export const getErrorResponse = (

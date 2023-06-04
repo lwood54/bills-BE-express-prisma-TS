@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const categoryController_1 = require("../controllers/categoryController");
 const router = express_1.default.Router();
+// ROOT: /categories
 // create category route
 router.post("/create", categoryController_1.createCategory);
 // get all categories by user

@@ -32,7 +32,8 @@ const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json(category);
     }
     catch (error) {
-        res.status(400).json({ error });
+        console.error("ERROR @categoryController create", error);
+        res.status(500).json(error);
     }
 });
 exports.createCategory = createCategory;
@@ -50,7 +51,8 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(200).json(categories);
     }
     catch (error) {
-        res.status(400).json(error);
+        console.error("ERROR @categoryController getCategories", error);
+        res.status(500).json(error);
     }
 });
 exports.getCategories = getCategories;
@@ -68,7 +70,8 @@ const getCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json(category);
     }
     catch (error) {
-        res.status(400).json(error);
+        console.error("ERROR @categoryController getCategory", error);
+        res.status(500).json(error);
     }
 });
 exports.getCategory = getCategory;
@@ -95,7 +98,8 @@ const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json(updatedBill);
     }
     catch (error) {
-        res.status(400).json(error);
+        console.error("ERROR @categoryController udpateCategory", error);
+        res.status(500).json(error);
     }
 });
 exports.updateCategory = updateCategory;
@@ -117,7 +121,8 @@ const deleteCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json(deletedCategory);
     }
     catch (error) {
-        res.status(400).json(error);
+        console.error("ERROR @categoryController deleteCategory", error);
+        res.status(500).json(error);
     }
 });
 exports.deleteCategory = deleteCategory;

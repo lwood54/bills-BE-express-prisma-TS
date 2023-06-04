@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -57,7 +56,7 @@ model Category {
 
 model Log {
   id         String   @id @default(uuid())
-  amount     Int
+  amount     Float
   category   Category @relation(fields: [categoryId], references: [id])
   scale      Scale    @default(NEUTRAL)
   title      String
