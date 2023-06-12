@@ -9,11 +9,13 @@ export const restricted = (
   const authToken = req.headers["authorization"]?.split(" ")[1];
   const secret = process.env.SECRET;
   if (!authToken || !secret) {
+    console.error("restricted - missing authToken or secret");
     return res.status(400).json({ error: "Unauthorized" });
   }
   jwt.verify(authToken, secret, (err, payload) => {
     if (err) {
-      return res.status(400).json({ error: "Unauthorized" });
+      console.error("restricted - error with verification", err);
+      return res.status(400).json({ error: "Unauthorized - expired token" });
     }
     req.payload = payload;
   });

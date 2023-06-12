@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteLog = exports.updateLog = exports.getLog = exports.getLogs = exports.createLog = void 0;
 const db_prisma_1 = __importDefault(require("../db/db.prisma"));
 const createLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { amount, categoryId, scale, title } = req.body;
+    const { amount, categoryId, createdAt, scale, title } = req.body;
     const userId = req.params.userId;
     if (!userId) {
         return res.status(403).json({ error: "not authorized" });
@@ -27,13 +27,14 @@ const createLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const createdLog = yield db_prisma_1.default.log.create({
             data: {
                 amount: Number(amount),
-                title,
-                scale,
                 category: {
                     connect: {
                         id: categoryId,
                     },
                 },
+                createdAt,
+                scale,
+                title,
                 user: {
                     connect: {
                         id: userId,
@@ -89,7 +90,7 @@ const getLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getLog = getLog;
 const updateLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const logId = req.params.id;
-    const { amount, categoryId, scale, title } = req.body;
+    const { amount, categoryId, createdAt, scale, title } = req.body;
     if (!logId) {
         res.status(400).json({ error: "log not specified" });
     }
@@ -102,7 +103,7 @@ const updateLog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updatedLog = yield db_prisma_1.default.log.update({
             where: { id: logId },
-            data: { amount, categoryId, scale, title },
+            data: { amount, categoryId, createdAt, scale, title },
         });
         res.status(200).json(updatedLog);
     }

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../db/db.prisma";
@@ -149,6 +149,9 @@ export const userUpdate = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   restricted(req, res);
+  if (!req.payload) {
+    return;
+  }
   const userId = req.params.id;
   if (!userId) {
     return res.status(400).json({ error: "user id required" });

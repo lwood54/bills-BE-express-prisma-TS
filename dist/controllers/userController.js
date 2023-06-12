@@ -162,6 +162,9 @@ const userUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.userUpdate = userUpdate;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     (0, restricted_1.restricted)(req, res);
+    if (!req.payload) {
+        return;
+    }
     const userId = req.params.id;
     if (!userId) {
         return res.status(400).json({ error: "user id required" });

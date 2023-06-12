@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../db/db.prisma";
 
 export const createLog = async (req: Request, res: Response) => {
-  const { amount, categoryId, scale, title } = req.body;
+  const { amount, categoryId, createdAt, scale, title } = req.body;
   const userId = req.params.userId;
   if (!userId) {
     return res.status(403).json({ error: "not authorized" });
@@ -14,13 +14,14 @@ export const createLog = async (req: Request, res: Response) => {
     const createdLog = await prisma.log.create({
       data: {
         amount: Number(amount),
-        title,
-        scale,
         category: {
           connect: {
             id: categoryId,
           },
         },
+        createdAt,
+        scale,
+        title,
         user: {
           connect: {
             id: userId,
@@ -73,7 +74,7 @@ export const getLog = async (req: Request, res: Response) => {
 
 export const updateLog = async (req: Request, res: Response) => {
   const logId = req.params.id;
-  const { amount, categoryId, scale, title } = req.body;
+  const { amount, categoryId, createdAt, scale, title } = req.body;
   if (!logId) {
     res.status(400).json({ error: "log not specified" });
   }
@@ -86,7 +87,7 @@ export const updateLog = async (req: Request, res: Response) => {
   try {
     const updatedLog = await prisma.log.update({
       where: { id: logId },
-      data: { amount, categoryId, scale, title },
+      data: { amount, categoryId, createdAt, scale, title },
     });
     res.status(200).json(updatedLog);
   } catch (error) {
