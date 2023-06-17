@@ -9,17 +9,22 @@ const restricted = (req, res, next) => {
     var _a;
     const authToken = (_a = req.headers["authorization"]) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     const secret = process.env.SECRET;
+    let hasError = false;
     if (!authToken || !secret) {
         console.error("restricted - missing authToken or secret");
-        return res.status(400).json({ error: "Unauthorized" });
+        return res.status(401).json({ error: "Unauthorized" });
     }
     jsonwebtoken_1.default.verify(authToken, secret, (err, payload) => {
         if (err) {
             console.error("restricted - error with verification", err);
-            return res.status(400).json({ error: "Unauthorized - expired token" });
+            hasError = true;
+            return res.status(401).json({ error: "Unauthorized - expired token" });
         }
         req.payload = payload;
     });
+    if (hasError) {
+        return;
+    }
     if (next) {
         next();
     }

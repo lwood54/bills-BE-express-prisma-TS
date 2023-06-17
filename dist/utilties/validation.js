@@ -1,14 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.billValidation = exports.getErrorResponse = void 0;
-const runtime_1 = require("@prisma/client/runtime");
-const getErrorResponse = (error, prefix, fallbackErrorMessage = "unkown server error") => {
-    if (error instanceof runtime_1.PrismaClientValidationError) {
-        return error.message;
-    }
-    return `${prefix}: ${fallbackErrorMessage}`;
-};
-exports.getErrorResponse = getErrorResponse;
+exports.billValidation = void 0;
 const billValidation = (type, balance, dayDue, rate, limit, amount, title) => {
     if (type === "create") {
         if (balance !== 0 && !Boolean(balance)) {

@@ -11,52 +11,57 @@ export const createCategory = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "category title is required" });
   }
   try {
-    const category = await prisma.category.create({
+    const response = await prisma.category.create({
       data: {
         title,
         userId,
       },
     });
-    res.status(200).json(category);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @categoryController create", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "failed attempt creating category" });
   }
 };
 
 export const getCategories = async (req: Request, res: Response) => {
   const userId = req.params.userId;
+  // return { message: "list list list" };
   if (!userId) {
     return res.status(403).json({ error: "not authorized" });
   }
   try {
-    const categories = await prisma.category.findMany({
+    const response = await prisma.category.findMany({
       where: {
         user: { id: userId },
       },
     });
-    res.status(200).json(categories);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @categoryController getCategories", error);
-    res.status(500).json(error);
+    return res
+      .status(500)
+      .json({ error: "failed attempt to fetch categories" });
   }
 };
 
 export const getCategory = async (req: Request, res: Response) => {
   const categoryId = req.params.id;
   if (!categoryId) {
-    res.status(400).json({ error: "category not specified" });
+    return res.status(400).json({ error: "category not specified" });
   }
   try {
-    const category = await prisma.category.findUnique({
+    const response = await prisma.category.findUnique({
       where: {
         id: categoryId,
       },
     });
-    res.status(200).json(category);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @categoryController getCategory", error);
-    res.status(500).json(error);
+    return res
+      .status(500)
+      .json({ error: "server error when getting categories" });
   }
 };
 
@@ -64,10 +69,10 @@ export const updateCategory = async (req: Request, res: Response) => {
   const categoryId = req.params.id;
   const { title } = req.body;
   if (!title) {
-    res.status(400).json({ error: "category title is required" });
+    return res.status(400).json({ error: "category title is required" });
   }
   if (!categoryId) {
-    res.status(400).json({ error: "category not specified" });
+    return res.status(400).json({ error: "category not specified" });
   }
   const isCategoryMatch = await prisma.category.findUnique({
     where: { id: categoryId },
@@ -76,21 +81,21 @@ export const updateCategory = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No matching category with that id" });
   }
   try {
-    const updatedBill = await prisma.category.update({
+    const response = await prisma.category.update({
       where: { id: categoryId },
       data: { title },
     });
-    res.status(200).json(updatedBill);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @categoryController udpateCategory", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error updating bill" });
   }
 };
 
 export const deleteCategory = async (req: Request, res: Response) => {
   const categoryId = req.params.id;
   if (!categoryId) {
-    res.status(400).json({ error: "id required" });
+    return res.status(400).json({ error: "id required" });
   }
   const isCategoryMatch = await prisma.category.findUnique({
     where: { id: categoryId },
@@ -99,12 +104,12 @@ export const deleteCategory = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No matching category with that id" });
   }
   try {
-    const deletedCategory = await prisma.category.delete({
+    const response = await prisma.category.delete({
       where: { id: categoryId },
     });
-    res.status(200).json(deletedCategory);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @categoryController deleteCategory", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error deleting category" });
   }
 };

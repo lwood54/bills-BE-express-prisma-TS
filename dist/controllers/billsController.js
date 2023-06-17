@@ -22,12 +22,18 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (validation !== "valid") {
         return res.status(400).json({ error: validation });
     }
-    const isUserMatch = yield db_prisma_1.default.user.findUnique({ where: { id: userId } });
-    if (!isUserMatch) {
-        return res.status(404).json({ error: "No user with that id" });
+    try {
+        const response = yield db_prisma_1.default.user.findUnique({ where: { id: userId } });
+        if (!response) {
+            return res.status(404).json({ error: "No user with that id" });
+        }
+    }
+    catch (error) {
+        console.error("ERROR @billsController createBill", error);
+        return res.status(400).json({ error: "server error getting user" });
     }
     try {
-        const bill = yield db_prisma_1.default.bill.create({
+        const response = yield db_prisma_1.default.bill.create({
             data: {
                 balance,
                 dayDue,
@@ -42,41 +48,37 @@ const createBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 },
             },
         });
-        if (bill) {
-            return res.status(200).json(bill);
+        if (response) {
+            return res.status(200).json(response);
         }
     }
     catch (error) {
         console.error("ERROR @billsController create", error);
-        return (res
-            .status(400)
-            // .json({ error: getErrorResponse(error, "createBill") });
-            .json(error));
+        return res.status(400).json({ error: "error creating bill" });
     }
-    // return res.status(200).json({ message: "fake result" });
 });
 exports.createBill = createBill;
 // get all bills by user
 const getBills = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
-    const isUserMatch = yield db_prisma_1.default.user.findUnique({
-        where: {
-            id: userId,
-        },
-    });
-    if (isUserMatch) {
-        try {
-            const bills = yield db_prisma_1.default.bill.findMany({ where: { userId } });
-            return res.status(200).json(bills);
-        }
-        catch (error) {
-            return res
-                .status(400)
-                .json({ error: (0, validation_1.getErrorResponse)(error, "getBills") });
+    try {
+        const response = yield db_prisma_1.default.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        if (!response) {
+            return res.status(400).json({ error: "unable to find user" });
         }
     }
-    else {
-        res.status(404).json({ error: "No user matches that id" });
+    catch (error) { }
+    try {
+        const bills = yield db_prisma_1.default.bill.findMany({ where: { userId } });
+        return res.status(200).json(bills);
+    }
+    catch (error) {
+        console.error("ERROR @billsController getBills", error);
+        return res.status(400).json({ error: "error getting bills" });
     }
 });
 exports.getBills = getBills;
@@ -85,10 +87,11 @@ const getBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const billId = req.params.id;
     try {
         const bill = yield db_prisma_1.default.bill.findUnique({ where: { id: billId } });
-        res.status(200).json(bill);
+        return res.status(200).json(bill);
     }
     catch (error) {
-        return res.status(400).json({ error: (0, validation_1.getErrorResponse)(error, "getBill") });
+        console.error("ERROR @billsController getBill", error);
+        return res.status(400).json({ error: "error getting bill" });
     }
 });
 exports.getBill = getBill;
@@ -100,16 +103,21 @@ const updateBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (validation !== "valid") {
         return res.status(400).json({ error: validation });
     }
-    const billMatch = yield db_prisma_1.default.bill.findUnique({
-        where: {
-            id: billId,
-        },
-    });
-    if (!billMatch) {
-        return res.status(404).json({ error: "unable to find bill" });
+    try {
+        const response = yield db_prisma_1.default.bill.findUnique({
+            where: {
+                id: billId,
+            },
+        });
+        if (!response) {
+            return res.status(404).json({ error: "unable to find bill" });
+        }
+    }
+    catch (error) {
+        return res.status(500).json({ error: "server error finding bill" });
     }
     try {
-        const bill = yield db_prisma_1.default.bill.update({
+        const response = yield db_prisma_1.default.bill.update({
             where: {
                 id: billId,
             },
@@ -122,14 +130,13 @@ const updateBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 title,
             },
         });
-        if (bill) {
-            return res.status(200).json(bill);
+        if (response) {
+            return res.status(200).json(response);
         }
     }
     catch (error) {
-        return res
-            .status(400)
-            .json({ error: (0, validation_1.getErrorResponse)(error, "updateBill") });
+        console.error("ERROR @billsController updateBill", error);
+        return res.status(400).json({ error: "error updating bill" });
     }
 });
 exports.updateBill = updateBill;
@@ -139,22 +146,21 @@ const deleteBill = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!billId) {
         return res.status(400).json({ error: "no bill id provided" });
     }
-    const billMatch = yield db_prisma_1.default.bill.findUnique({
+    const response = yield db_prisma_1.default.bill.findUnique({
         where: {
             id: billId,
         },
     });
-    if (!billMatch) {
+    if (!response) {
         return res.status(404).json({ error: "unable to find bill" });
     }
     try {
-        const bill = yield db_prisma_1.default.bill.delete({ where: { id: billId } });
-        return res.status(200).json(bill);
+        const response = yield db_prisma_1.default.bill.delete({ where: { id: billId } });
+        return res.status(200).json(response);
     }
     catch (error) {
-        return res
-            .status(400)
-            .json({ error: (0, validation_1.getErrorResponse)(error, "deleteBill") });
+        console.error("ERROR @billsController deleteBill", error);
+        return res.status(400).json({ error: "error deleting bill" });
     }
 });
 exports.deleteBill = deleteBill;

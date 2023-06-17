@@ -11,7 +11,7 @@ export const createLog = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "log title is required" });
   }
   try {
-    const createdLog = await prisma.log.create({
+    const response = await prisma.log.create({
       data: {
         amount: Number(amount),
         category: {
@@ -29,10 +29,10 @@ export const createLog = async (req: Request, res: Response) => {
         },
       },
     });
-    res.status(200).json(createdLog);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @logsController create", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error creating log" });
   }
 };
 
@@ -42,15 +42,15 @@ export const getLogs = async (req: Request, res: Response) => {
     return res.status(403).json({ error: "not authorized" });
   }
   try {
-    const logs = await prisma.log.findMany({
+    const response = await prisma.log.findMany({
       where: {
         user: { id: userId },
       },
     });
-    res.status(200).json(logs);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @logsController getLogs", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error getting logs" });
   }
 };
 
@@ -60,15 +60,15 @@ export const getLog = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "no matching log" });
   }
   try {
-    const log = await prisma.log.findUnique({
+    const response = await prisma.log.findUnique({
       where: {
         id: logId,
       },
     });
-    res.status(200).json(log);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @logsController getLog", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error getting log" });
   }
 };
 
@@ -76,7 +76,7 @@ export const updateLog = async (req: Request, res: Response) => {
   const logId = req.params.id;
   const { amount, categoryId, createdAt, scale, title } = req.body;
   if (!logId) {
-    res.status(400).json({ error: "log not specified" });
+    return res.status(400).json({ error: "log not specified" });
   }
   const isLogMatch = await prisma.log.findUnique({
     where: { id: logId },
@@ -85,21 +85,21 @@ export const updateLog = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No matching log with that id" });
   }
   try {
-    const updatedLog = await prisma.log.update({
+    const response = await prisma.log.update({
       where: { id: logId },
       data: { amount, categoryId, createdAt, scale, title },
     });
-    res.status(200).json(updatedLog);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @logsController udpateLog", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error updating log" });
   }
 };
 
 export const deleteLog = async (req: Request, res: Response) => {
   const logId = req.params.id;
   if (!logId) {
-    res.status(400).json({ error: "id required" });
+    return res.status(400).json({ error: "id required" });
   }
   const isLogMatch = await prisma.log.findUnique({
     where: { id: logId },
@@ -108,12 +108,12 @@ export const deleteLog = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No matching log with that id" });
   }
   try {
-    const deletedLog = await prisma.log.delete({
+    const response = await prisma.log.delete({
       where: { id: logId },
     });
-    res.status(200).json(deletedLog);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("ERROR @logsController deleteLog", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error deleting log" });
   }
 };

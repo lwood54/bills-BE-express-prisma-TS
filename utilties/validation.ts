@@ -1,16 +1,3 @@
-import { PrismaClientValidationError } from "@prisma/client/runtime";
-
-export const getErrorResponse = (
-  error: unknown,
-  prefix?: string,
-  fallbackErrorMessage = "unkown server error"
-): string => {
-  if (error instanceof PrismaClientValidationError) {
-    return error.message;
-  }
-  return `${prefix}: ${fallbackErrorMessage}`;
-};
-
 export const billValidation = (
   type: "create" | "update",
   balance: number,

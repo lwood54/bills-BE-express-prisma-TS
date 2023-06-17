@@ -23,7 +23,7 @@ app.use("/bills", restricted_1.restricted, bills_1.default);
 app.use("/categories", restricted_1.restricted, categories_1.default);
 app.use("/logs", restricted_1.restricted, logs_1.default);
 app.get("/test", (_, res) => {
-    res.json({ message: "hello test world!" });
+    return res.json({ message: "hello test world!" });
 });
 app.listen(port, () => {
     console.log(`Server is running on PORT: ${port}`);

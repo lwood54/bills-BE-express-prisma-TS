@@ -22,7 +22,7 @@ app.use("/bills", restricted, billsRoutes);
 app.use("/categories", restricted, categoryRoutes);
 app.use("/logs", restricted, logRoutes);
 app.get("/test", (_, res) => {
-  res.json({ message: "hello test world!" });
+  return res.json({ message: "hello test world!" });
 });
 
 app.listen(port, () => {

@@ -18,23 +18,23 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "All fields must be filled" });
   }
   try {
-    const user = await prisma.user.findUnique({ where: { username } });
-    if (!user) {
+    const response = await prisma.user.findUnique({ where: { username } });
+    if (!response) {
       return res.status(404).json({ error: "No user with that username" });
     }
-    if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
+    if (response) {
+      const isMatch = await bcrypt.compare(password, response.password);
       if (!isMatch) {
         return res.status(404).json({ error: "Incorrect password" });
       }
-      const token = createToken(user.id);
-      res
+      const token = createToken(response.id);
+      return res
         .status(200)
-        .json({ username, userId: user.id, email: user.email, token });
+        .json({ username, userId: response.id, email: response.email, token });
     }
   } catch (error) {
     console.error("ERROR @userController login", error);
-    res.status(500).json(error);
+    return res.status(500).json({ error: "server error logging in" });
   }
 };
 
@@ -50,36 +50,36 @@ export const signup = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "username required" });
   }
   try {
-    const userByEmail = await prisma.user.findFirst({
+    const response = await prisma.user.findFirst({
       where: {
         email,
       },
     });
-    if (userByEmail) {
+    if (response) {
       return res.status(409).json({ message: "email is already taken" });
     }
   } catch (error) {
     console.error("ERROR @email lookup: ", error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ error: "server error finding user" });
   }
 
   try {
-    const userByUsername = await prisma.user.findFirst({
+    const response = await prisma.user.findFirst({
       where: {
         username,
       },
     });
-    if (userByUsername) {
+    if (response) {
       return res.status(409).json({ message: "username is already taken" });
     }
   } catch (error) {
     console.error("ERROR @username lookup: ", error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ error: "server error getting user" });
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   try {
-    const user = await prisma.user.create({
+    const response = await prisma.user.create({
       data: {
         email,
         firstName,
@@ -88,16 +88,21 @@ export const signup = async (req: Request, res: Response) => {
         username,
       },
     });
-    if (user) {
-      const token = createToken(user.id);
-      const { email, firstName, lastName, username } = user;
-      return res
-        .status(200)
-        .json({ email, firstName, lastName, username, userId: user.id, token });
+    if (response) {
+      const token = createToken(response.id);
+      const { email, firstName, lastName, username } = response;
+      return res.status(200).json({
+        email,
+        firstName,
+        lastName,
+        username,
+        userId: response.id,
+        token,
+      });
     }
   } catch (error) {
     console.error("ERROR @user create: ", error);
-    res.status(500).json({ error });
+    return res.status(500).json({ error: "server error creating user" });
   }
 };
 
@@ -111,19 +116,25 @@ export const userUpdate = async (req: Request, res: Response) => {
     return res.status(404).json({ error: "No user matches the credentials" });
   }
 
-  const isUsernameTaken = await prisma.user.findFirst({
-    where: {
-      username,
-    },
-  });
-  if (isUsernameTaken) {
-    return res.status(400).json({ message: "username is already taken" });
+  try {
+    const response = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
+    if (response) {
+      return res.status(409).json({ message: "username is already taken" });
+    }
+  } catch (error) {
+    console.error("ERROR @username lookup: ", error);
+    return res.status(500).json({ error: "server error getting user" });
   }
+
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = password && (await bcrypt.hash(password, salt));
 
-    const updatedUser = await prisma.user.update({
+    const response = await prisma.user.update({
       where: { id: userId },
       data: {
         email,
@@ -133,17 +144,17 @@ export const userUpdate = async (req: Request, res: Response) => {
         username,
       },
     });
-    if (updatedUser) {
+    if (response) {
       return res.status(200).json({
-        username: updatedUser.username,
-        email: updatedUser.email,
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
+        username: response.username,
+        email: response.email,
+        firstName: response.firstName,
+        lastName: response.lastName,
       });
     }
   } catch (error) {
     console.error("ERROR @userController update", error);
-    return res.status(400).json(error);
+    return res.status(400).json({ error: "server error updating user" });
   }
 };
 
@@ -158,18 +169,18 @@ export const getUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
+    const response = await prisma.user.findUnique({ where: { id: userId } });
+    if (!response) {
       return res.status(404).json({ error: "User not found." });
     } else {
-      const { email, username, firstName, lastName } = user;
+      const { email, username, firstName, lastName } = response;
       return res
         .status(200)
         .json({ email, username, firstName, lastName, userId });
     }
   } catch (error) {
     console.error("ERROR @userController getUser", error);
-    return res.status(400).json(error);
+    return res.status(400).json({ error: "server error getting user" });
   }
 };
 

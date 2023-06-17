@@ -24,55 +24,60 @@ const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(400).json({ error: "category title is required" });
     }
     try {
-        const category = yield db_prisma_1.default.category.create({
+        const response = yield db_prisma_1.default.category.create({
             data: {
                 title,
                 userId,
             },
         });
-        res.status(200).json(category);
+        return res.status(200).json(response);
     }
     catch (error) {
         console.error("ERROR @categoryController create", error);
-        res.status(500).json(error);
+        return res.status(500).json({ error: "failed attempt creating category" });
     }
 });
 exports.createCategory = createCategory;
 const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
+    // return { message: "list list list" };
     if (!userId) {
         return res.status(403).json({ error: "not authorized" });
     }
     try {
-        const categories = yield db_prisma_1.default.category.findMany({
+        const response = yield db_prisma_1.default.category.findMany({
             where: {
                 user: { id: userId },
             },
         });
-        res.status(200).json(categories);
+        return res.status(200).json(response);
     }
     catch (error) {
         console.error("ERROR @categoryController getCategories", error);
-        res.status(500).json(error);
+        return res
+            .status(500)
+            .json({ error: "failed attempt to fetch categories" });
     }
 });
 exports.getCategories = getCategories;
 const getCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const categoryId = req.params.id;
     if (!categoryId) {
-        res.status(400).json({ error: "category not specified" });
+        return res.status(400).json({ error: "category not specified" });
     }
     try {
-        const category = yield db_prisma_1.default.category.findUnique({
+        const response = yield db_prisma_1.default.category.findUnique({
             where: {
                 id: categoryId,
             },
         });
-        res.status(200).json(category);
+        return res.status(200).json(response);
     }
     catch (error) {
         console.error("ERROR @categoryController getCategory", error);
-        res.status(500).json(error);
+        return res
+            .status(500)
+            .json({ error: "server error when getting categories" });
     }
 });
 exports.getCategory = getCategory;
@@ -80,10 +85,10 @@ const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const categoryId = req.params.id;
     const { title } = req.body;
     if (!title) {
-        res.status(400).json({ error: "category title is required" });
+        return res.status(400).json({ error: "category title is required" });
     }
     if (!categoryId) {
-        res.status(400).json({ error: "category not specified" });
+        return res.status(400).json({ error: "category not specified" });
     }
     const isCategoryMatch = yield db_prisma_1.default.category.findUnique({
         where: { id: categoryId },
@@ -92,22 +97,22 @@ const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(404).json({ error: "No matching category with that id" });
     }
     try {
-        const updatedBill = yield db_prisma_1.default.category.update({
+        const response = yield db_prisma_1.default.category.update({
             where: { id: categoryId },
             data: { title },
         });
-        res.status(200).json(updatedBill);
+        return res.status(200).json(response);
     }
     catch (error) {
         console.error("ERROR @categoryController udpateCategory", error);
-        res.status(500).json(error);
+        return res.status(500).json({ error: "server error updating bill" });
     }
 });
 exports.updateCategory = updateCategory;
 const deleteCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const categoryId = req.params.id;
     if (!categoryId) {
-        res.status(400).json({ error: "id required" });
+        return res.status(400).json({ error: "id required" });
     }
     const isCategoryMatch = yield db_prisma_1.default.category.findUnique({
         where: { id: categoryId },
@@ -116,14 +121,14 @@ const deleteCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(404).json({ error: "No matching category with that id" });
     }
     try {
-        const deletedCategory = yield db_prisma_1.default.category.delete({
+        const response = yield db_prisma_1.default.category.delete({
             where: { id: categoryId },
         });
-        res.status(200).json(deletedCategory);
+        return res.status(200).json(response);
     }
     catch (error) {
         console.error("ERROR @categoryController deleteCategory", error);
-        res.status(500).json(error);
+        return res.status(500).json({ error: "server error deleting category" });
     }
 });
 exports.deleteCategory = deleteCategory;
