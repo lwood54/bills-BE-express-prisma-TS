@@ -17,7 +17,7 @@ export const restricted = (
     if (err) {
       console.error("restricted - error with verification", err);
       hasError = true;
-      return res.status(401).json({ error: "Unauthorized - expired token" });
+      return res.status(401).json({ error: "Expired Token" });
     }
     req.payload = payload;
   });

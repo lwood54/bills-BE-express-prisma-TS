@@ -20,7 +20,8 @@ const restricted_1 = require("../middleware/restricted");
 const envSecret = process.env.SECRET;
 const createToken = (_id) => {
     if (envSecret) {
-        return jsonwebtoken_1.default.sign({ _id }, envSecret, { expiresIn: "3d" });
+        // return jwt.sign({ _id }, envSecret, { expiresIn: "3d" });
+        return jsonwebtoken_1.default.sign({ _id }, envSecret, { expiresIn: "1m" });
     }
 };
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

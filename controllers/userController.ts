@@ -8,7 +8,8 @@ const envSecret = process.env.SECRET;
 
 const createToken = (_id: string) => {
   if (envSecret) {
-    return jwt.sign({ _id }, envSecret, { expiresIn: "3d" });
+    // return jwt.sign({ _id }, envSecret, { expiresIn: "3d" });
+    return jwt.sign({ _id }, envSecret, { expiresIn: "1m" });
   }
 };
 
